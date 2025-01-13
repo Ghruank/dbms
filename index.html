@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+    <h1>Student Registration</h1>
+    <form id="registrationForm">
+        <input type="hidden" id="id" name="id">
+        <label for="studentId">Student ID:</label>
+        <input type="text" id="studentId" name="studentId" required><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="branch">Branch:</label>
+        <select id="branch" name="branch" required>
+            <option value="" disabled selected>Branch</option>
+        </select><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="text" id="dob" name="dob" required><br>
+
+        <button type="submit" id="submitButton">Register</button>
+    </form>
+
+    <h2>Fetch Student by ID</h2>
+    <form id="fetchForm">
+        <label for="fetchStudentId">Student ID:</label>
+        <input type="text" id="fetchStudentId" name="fetchStudentId" required><br>
+        <button type="submit">Fetch Student</button>
+    </form>
+
+    <h2>Add Branch</h2>
+    <form id="branchForm">
+        <label for="branchName">Branch Name:</label>
+        <input type="text" id="branchName" name="branchName" required><br>
+
+        <label for="hod">HOD:</label>
+        <input type="text" id="branchHod" name="hod" required><br>
+
+        <button type="submit">Add Branch</button>
+    </form>
+
+    <h2>Registered Students</h2>
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Branch</th>
+                <th>HOD</th>
+                <th>Date of Birth</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Student data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script src="http://localhost:8080/script.js"></script>
+    <script>
+        $(function() {
+            $("#dob").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:2023",
+                dateFormat: "yy-mm-dd"
+            });
+        });
+    </script>
+</body>
+</html>

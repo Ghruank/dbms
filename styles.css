@@ -1,0 +1,147 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f7ff;
+    color: #2c3e50;
+}
+
+h1 {
+    color: #3498db;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #e74c8c;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+form {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+input[type="text"], 
+input[type="date"],
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, 
+input[type="date"]:focus,
+select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+th, td {
+    border: none;
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 500;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e8f0fe;
+}
+
+/* Form specific styles */
+#registrationForm {
+    border-left: 5px solid #3498db;
+}
+
+#branchForm {
+    border-left: 5px solid #e74c8c;
+}
+
+/* Datepicker customization */
+.ui-datepicker {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.ui-datepicker-header {
+    background-color: #3498db;
+    color: white;
+    border-radius: 6px 6px 0 0;
+}
+
+.ui-datepicker-calendar th {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    form {
+        padding: 15px;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}

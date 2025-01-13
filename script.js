@@ -82,7 +82,8 @@ function fetchStudentById(studentId) {
     fetch(`http://localhost:8080/student?id=${studentId}`)
         .then(response => response.json())
         .then(student => {
-            document.getElementById("id").value = student.student_id;
+            document.getElementById("id").value = student.id;
+            document.getElementById("studentId").value = student.student_id;
             document.getElementById("name").value = student.name;
             document.getElementById("branch").value = student.branch;
             document.getElementById("dob").value = student.dob;

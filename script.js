@@ -55,22 +55,35 @@ function fetchStudents() {
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
-            tableBody.innerHTML = "";
+            tableBody.innerHTML = ""; // Clear existing rows
             data.forEach(student => {
                 const row = tableBody.insertRow();
-                row.insertCell(0).textContent = student.student_id;
-                row.insertCell(1).textContent = student.name;
-                row.insertCell(2).textContent = student.branch;
-                row.insertCell(3).textContent = student.hod;
-                row.insertCell(4).textContent = student.dob;
-                row.insertCell(5).textContent = student.age;
-                const actionsCell = row.insertCell(6);
+                row.insertCell(0).textContent = student.student_id; // Student ID
+                row.insertCell(1).textContent = student.name; // Name
+                row.insertCell(2).textContent = student.branch; // Branch
+                row.insertCell(3).textContent = student.hod; // HOD
+                row.insertCell(4).textContent = student.dob; // Date of Birth
+                row.insertCell(5).textContent = student.age; // Age
+
+                const actionsCell = row.insertCell(6); // Actions cell
+                
+                // Edit Button
                 const editButton = document.createElement("button");
                 editButton.textContent = "Edit";
+                editButton.className = "edit-button";
                 editButton.onclick = function() {
                     fetchStudentById(student.student_id);
                 };
                 actionsCell.appendChild(editButton);
+
+                // Delete Button
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-button";
+                deleteButton.onclick = function() {
+                    deleteStudent(student.student_id);
+                };
+                actionsCell.appendChild(deleteButton);
             });
         })
         .catch(error => {
@@ -150,5 +163,20 @@ function addBranch() {
     })
     .catch(error => {
         console.error("Error:", error);
+    });
+}
+
+function deleteStudent(studentId) {
+    fetch(`http://localhost:8080/delete`, {
+        method: "POST",
+        body: new URLSearchParams({ studentId: studentId })
+    })
+    .then(response => response.text())
+    .then(message => {
+        alert(message);
+        fetchStudents();
+    })
+    .catch(error => {
+        console.error("Error deleting student:", error);
     });
 }

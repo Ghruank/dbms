@@ -199,6 +199,25 @@ func updateStudent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func deleteStudent(w http.ResponseWriter, r *http.Request) {
+	log.Println("Received request to delete student")
+	if r.Method == "POST" {
+		studentId := r.FormValue("studentId")
+
+		log.Printf("Deleting student: StudentID=%s", studentId)
+
+		_, err := db.Exec("DELETE FROM students WHERE student_id = ?", studentId)
+		if err != nil {
+			http.Error(w, "Failed to delete student", http.StatusInternalServerError)
+			log.Println("Failed to delete student:", err)
+			return
+		}
+
+		fmt.Fprintf(w, "Student deleted successfully")
+		log.Println("Student deleted successfully")
+	}
+}
+
 func addBranch(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request to add branch")
 	if r.Method == "POST" {
@@ -255,6 +274,7 @@ func main() {
 	http.HandleFunc("/students", getStudents)
 	http.HandleFunc("/student", getStudentByID)
 	http.HandleFunc("/update", updateStudent)
+	http.HandleFunc("/delete", deleteStudent)
 	http.HandleFunc("/addBranch", addBranch)
 	http.HandleFunc("/branches", getBranches)
 	http.Handle("/", http.FileServer(http.Dir("."))) // Serve static files from the current directory

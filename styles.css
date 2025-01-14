@@ -145,3 +145,31 @@ tr:hover {
         overflow-x: auto;
     }
 }
+
+/* Styles for edit and delete buttons */
+button.edit-button {
+    background-color: #3498db;
+    margin-right: 10px;
+}
+
+button.delete-button {
+    background-color: #e74c3c;
+    margin-left: 10px;
+}
+
+button.delete-button:hover {
+    background-color: #c0392b;
+}
+
+.edit-button, .delete-button {
+    padding: 6px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    border: none;
+}
+
+td button {
+    display: inline-block;
+}

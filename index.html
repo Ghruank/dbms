@@ -49,6 +49,30 @@
         <button type="submit">Add Branch</button>
     </form>
 
+    <h2>Filter Students</h2>
+    <form id="filterForm">
+        <label for="filterBranch">Branch:</label>
+        <select id="filterBranch" name="filterBranch">
+            <option value="" disabled selected>Branch</option>
+            <!-- Branch options will be populated dynamically -->
+        </select><br>
+
+        <label for="minAge">Min Age:</label>
+        <input type="text" id="minAge" name="minAge"><br>
+
+        <label for="maxAge">Max Age:</label>
+        <input type="text" id="maxAge" name="maxAge"><br>
+
+        <label for="startDate">Start Date of Birth:</label>
+        <input type="text" id="startDate" name="startDate"><br>
+
+        <label for="endDate">End Date of Birth:</label>
+        <input type="text" id="endDate" name="endDate"><br>
+
+        <button type="submit">Filter</button>
+        <button type="button" id="removeFilterButton" class="remove-filter-button">Remove Filter</button>
+    </form>
+
     <h2>Registered Students</h2>
     <table id="studentsTable">
         <thead>
@@ -70,15 +94,16 @@
     <script src="http://localhost:8080/script.js"></script>
     <script>
         $(function() {
-            $("#dob").datepicker({
+            $("#dob, #startDate, #endDate").datepicker({
                 changeMonth: true,
                 changeYear: true,
-                yearRange: "1900:2023",
+                yearRange: "2000:2023",
                 dateFormat: "yy-mm-dd"
             });
         });
 
         document.addEventListener("DOMContentLoaded", function() {
+            fetchBranches(); // Fetch branches when the page loads
             fetchStudents(); // Fetch students when the page loads
         });
     </script>

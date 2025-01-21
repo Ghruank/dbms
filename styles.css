@@ -173,3 +173,69 @@ button.delete-button:hover {
 td button {
     display: inline-block;
 }
+
+/* Filter form styles */
+#filterForm {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+#filterForm label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+#filterForm input[type="text"], 
+#filterForm input[type="date"],
+#filterForm select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+#filterForm input[type="text"]:focus, 
+#filterForm input[type="date"]:focus,
+#filterForm select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+#filterForm button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#filterForm button:hover {
+    background-color: #2980b9;
+}
+
+#filterForm .remove-filter-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+#filterForm .remove-filter-button:hover {
+    background-color: #c0392b;
+}

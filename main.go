@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -70,7 +71,6 @@ func registerStudent(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Split the name into first name and last name
 		nameParts := strings.SplitN(name, " ", 2)
 		firstName := nameParts[0]
 		lastName := ""
@@ -94,7 +94,29 @@ func registerStudent(w http.ResponseWriter, r *http.Request) {
 
 func getStudents(w http.ResponseWriter, r *http.Request) {
 	log.Println("Received request to get students")
-	rows, err := db.Query("SELECT s.student_id, s.name, b.branch_name, b.hod, s.dob FROM students s JOIN branches b ON s.branch_id = b.branch_id")
+
+	branch := r.URL.Query().Get("branch")
+	minAge := r.URL.Query().Get("minAge")
+	maxAge := r.URL.Query().Get("maxAge")
+	startDate := r.URL.Query().Get("startDate")
+	endDate := r.URL.Query().Get("endDate")
+
+	query := `SELECT s.student_id, s.name, b.branch_name, b.hod, s.dob 
+			  FROM students s 
+			  JOIN branches b ON s.branch_id = b.branch_id 
+			  WHERE 1=1`
+	var args []interface{}
+
+	if branch != "" {
+		query += " AND b.branch_name = ?"
+		args = append(args, branch)
+	}
+	if startDate != "" && endDate != "" {
+		query += " AND s.dob BETWEEN ? AND ?"
+		args = append(args, startDate, endDate)
+	}
+
+	rows, err := db.Query(query, args...)
 	if err != nil {
 		http.Error(w, "Failed to retrieve students", http.StatusInternalServerError)
 		log.Println("Failed to retrieve students:", err)
@@ -111,6 +133,11 @@ func getStudents(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		age := calculateAge(dob)
+		minAgeInt, _ := strconv.Atoi(minAge)
+		maxAgeInt, _ := strconv.Atoi(maxAge)
+		if (minAge != "" && age < minAgeInt) || (maxAge != "" && age > maxAgeInt) {
+			continue
+		}
 		student := map[string]interface{}{
 			"student_id": studentId,
 			"name":       name,
@@ -122,6 +149,7 @@ func getStudents(w http.ResponseWriter, r *http.Request) {
 		students = append(students, student)
 	}
 
+	log.Printf("Fetched %d students", len(students))
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(students)
 }
@@ -143,8 +171,13 @@ func getStudentByID(w http.ResponseWriter, r *http.Request) {
 
 	err := db.QueryRow("SELECT s.student_id, s.name, b.branch_name, s.dob FROM students s JOIN branches b ON s.branch_id = b.branch_id WHERE s.student_id = ?", studentId).Scan(&student.StudentID, &student.Name, &student.Branch, &student.Dob)
 	if err != nil {
-		http.Error(w, "Failed to retrieve student", http.StatusInternalServerError)
-		log.Println("Failed to retrieve student:", err)
+		if err == sql.ErrNoRows {
+			http.Error(w, "Student not found", http.StatusNotFound)
+			log.Println("Student not found:", studentId)
+		} else {
+			http.Error(w, "Failed to retrieve student", http.StatusInternalServerError)
+			log.Println("Failed to retrieve student:", err)
+		}
 		return
 	}
 
@@ -178,7 +211,6 @@ func updateStudent(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Split the name into first name and last name
 		nameParts := strings.SplitN(name, " ", 2)
 		firstName := nameParts[0]
 		lastName := ""
@@ -210,6 +242,13 @@ func deleteStudent(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "Failed to delete student", http.StatusInternalServerError)
 			log.Println("Failed to delete student:", err)
+			return
+		}
+
+		_, err = db.Exec("DELETE FROM student_names WHERE id = (SELECT id FROM students WHERE student_id = ?)", studentId)
+		if err != nil {
+			http.Error(w, "Failed to delete student name", http.StatusInternalServerError)
+			log.Println("Failed to delete student name:", err)
 			return
 		}
 
@@ -277,7 +316,7 @@ func main() {
 	http.HandleFunc("/delete", deleteStudent)
 	http.HandleFunc("/addBranch", addBranch)
 	http.HandleFunc("/branches", getBranches)
-	http.Handle("/", http.FileServer(http.Dir("."))) // Serve static files from the current directory
+	http.Handle("/", http.FileServer(http.Dir(".")))
 	log.Println("Server is running on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

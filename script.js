@@ -29,6 +29,16 @@ document.addEventListener("DOMContentLoaded", function() {
         const branch = branches.find(branch => branch.branch_name === selectedBranch);
         document.getElementById("hod").value = branch ? branch.hod : "";
     });
+
+    document.getElementById("filterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        filterStudents();
+    });
+
+    document.getElementById("removeFilterButton").addEventListener("click", function() {
+        document.getElementById("filterForm").reset();
+        fetchStudents(); // Ensure the student list is refreshed
+    });
 });
 
 function fetchBranches() {
@@ -36,13 +46,16 @@ function fetchBranches() {
         .then(response => response.json())
         .then(data => {
             const branchSelect = document.getElementById("branch");
+            const filterBranchSelect = document.getElementById("filterBranch");
             branchSelect.innerHTML = '<option value="" disabled selected>Branch</option>'; // Clear existing options and add default option
+            filterBranchSelect.innerHTML = '<option value="" disabled selected>Branch</option>'; // Clear existing options and add default option
             localStorage.setItem("branches", JSON.stringify(data));
             data.forEach(branch => {
                 const option = document.createElement("option");
                 option.value = branch.branch_name;
                 option.textContent = branch.branch_name;
                 branchSelect.appendChild(option);
+                filterBranchSelect.appendChild(option.cloneNode(true));
             });
         })
         .catch(error => {
@@ -54,6 +67,7 @@ function fetchStudents() {
     fetch("http://localhost:8080/students")
         .then(response => response.json())
         .then(data => {
+            console.log("Fetched students:", data); // Log fetched students
             const tableBody = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
             tableBody.innerHTML = ""; // Clear existing rows
             data.forEach(student => {
@@ -81,7 +95,9 @@ function fetchStudents() {
                 deleteButton.textContent = "Delete";
                 deleteButton.className = "delete-button";
                 deleteButton.onclick = function() {
-                    deleteStudent(student.student_id);
+                    if (confirm("Are you sure you want to delete this student?")) {
+                        deleteStudent(student.student_id);
+                    }
                 };
                 actionsCell.appendChild(deleteButton);
             });
@@ -93,7 +109,12 @@ function fetchStudents() {
 
 function fetchStudentById(studentId) {
     fetch(`http://localhost:8080/student?id=${studentId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Student not found");
+            }
+            return response.json();
+        })
         .then(student => {
             document.getElementById("id").value = student.id;
             document.getElementById("studentId").value = student.student_id;
@@ -103,6 +124,7 @@ function fetchStudentById(studentId) {
             document.getElementById("submitButton").textContent = "Update";
         })
         .catch(error => {
+            alert(error.message);
             console.error("Error fetching student:", error);
         });
 }
@@ -140,6 +162,7 @@ function updateStudent(studentId) {
         alert(message);
         fetchStudents();
         form.reset(); // Clear the form inputs
+        document.getElementById("id").value = ""; // Clear the hidden id field
         document.getElementById("submitButton").textContent = "Register";
     })
     .catch(error => {
@@ -179,4 +202,53 @@ function deleteStudent(studentId) {
     .catch(error => {
         console.error("Error deleting student:", error);
     });
+}
+
+function filterStudents() {
+    const branch = document.getElementById("filterBranch").value;
+    const minAge = document.getElementById("minAge").value;
+    const maxAge = document.getElementById("maxAge").value;
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    fetch(`http://localhost:8080/students?branch=${branch}&minAge=${minAge}&maxAge=${maxAge}&startDate=${startDate}&endDate=${endDate}`)
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = ""; // Clear existing rows
+            data.forEach(student => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = student.student_id; // Student ID
+                row.insertCell(1).textContent = student.name; // Name
+                row.insertCell(2).textContent = student.branch; // Branch
+                row.insertCell(3).textContent = student.hod; // HOD
+                row.insertCell(4).textContent = student.dob; // Date of Birth
+                row.insertCell(5).textContent = student.age; // Age
+
+                const actionsCell = row.insertCell(6); // Actions cell
+                
+                // Edit Button
+                const editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.className = "edit-button";
+                editButton.onclick = function() {
+                    fetchStudentById(student.student_id);
+                };
+                actionsCell.appendChild(editButton);
+
+                // Delete Button
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-button";
+                deleteButton.onclick = function() {
+                    if (confirm("Are you sure you want to delete this student?")) {
+                        deleteStudent(student.student_id);
+                    }
+                };
+                actionsCell.appendChild(deleteButton);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching students:", error);
+        });
 }

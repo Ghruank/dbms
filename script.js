@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("removeFilterButton").addEventListener("click", function() {
         document.getElementById("filterForm").reset();
-        fetchStudents(); // Ensure the student list is refreshed
+        fetchStudents(); 
     });
 });
 
@@ -67,17 +67,17 @@ function fetchStudents() {
     fetch("http://localhost:8080/students")
         .then(response => response.json())
         .then(data => {
-            console.log("Fetched students:", data); // Log fetched students
+            console.log("Fetched students:", data); 
             const tableBody = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
-            tableBody.innerHTML = ""; // Clear existing rows
+            tableBody.innerHTML = ""; 
             data.forEach(student => {
                 const row = tableBody.insertRow();
-                row.insertCell(0).textContent = student.student_id; // Student ID
-                row.insertCell(1).textContent = student.name; // Name
-                row.insertCell(2).textContent = student.branch; // Branch
-                row.insertCell(3).textContent = student.hod; // HOD
-                row.insertCell(4).textContent = student.dob; // Date of Birth
-                row.insertCell(5).textContent = student.age; // Age
+                row.insertCell(0).textContent = student.student_id; 
+                row.insertCell(1).textContent = student.name;
+                row.insertCell(2).textContent = student.branch; 
+                row.insertCell(3).textContent = student.hod;
+                row.insertCell(4).textContent = student.dob; 
+                row.insertCell(5).textContent = student.age; 
 
                 const actionsCell = row.insertCell(6); // Actions cell
                 
@@ -161,8 +161,8 @@ function updateStudent(studentId) {
     .then(message => {
         alert(message);
         fetchStudents();
-        form.reset(); // Clear the form inputs
-        document.getElementById("id").value = ""; // Clear the hidden id field
+        form.reset();
+        document.getElementById("id").value = ""; 
         document.getElementById("submitButton").textContent = "Register";
     })
     .catch(error => {
@@ -182,7 +182,7 @@ function addBranch() {
     .then(message => {
         alert(message);
         fetchBranches();
-        form.reset(); // Clear the form inputs
+        form.reset(); 
     })
     .catch(error => {
         console.error("Error:", error);
@@ -215,17 +215,17 @@ function filterStudents() {
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
-            tableBody.innerHTML = ""; // Clear existing rows
+            tableBody.innerHTML = ""; 
             data.forEach(student => {
                 const row = tableBody.insertRow();
-                row.insertCell(0).textContent = student.student_id; // Student ID
-                row.insertCell(1).textContent = student.name; // Name
-                row.insertCell(2).textContent = student.branch; // Branch
-                row.insertCell(3).textContent = student.hod; // HOD
-                row.insertCell(4).textContent = student.dob; // Date of Birth
-                row.insertCell(5).textContent = student.age; // Age
+                row.insertCell(0).textContent = student.student_id; 
+                row.insertCell(1).textContent = student.name; 
+                row.insertCell(2).textContent = student.branch; 
+                row.insertCell(3).textContent = student.hod;
+                row.insertCell(4).textContent = student.dob; 
+                row.insertCell(5).textContent = student.age; 
 
-                const actionsCell = row.insertCell(6); // Actions cell
+                const actionsCell = row.insertCell(6); 
                 
                 // Edit Button
                 const editButton = document.createElement("button");

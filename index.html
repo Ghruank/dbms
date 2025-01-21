@@ -54,7 +54,6 @@
         <label for="filterBranch">Branch:</label>
         <select id="filterBranch" name="filterBranch">
             <option value="" disabled selected>Branch</option>
-            <!-- Branch options will be populated dynamically -->
         </select><br>
 
         <label for="minAge">Min Age:</label>
@@ -103,8 +102,8 @@
         });
 
         document.addEventListener("DOMContentLoaded", function() {
-            fetchBranches(); // Fetch branches when the page loads
-            fetchStudents(); // Fetch students when the page loads
+            fetchBranches();
+            fetchStudents();
         });
     </script>
 </body>
